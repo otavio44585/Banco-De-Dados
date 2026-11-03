@@ -1,0 +1,76 @@
+<?xml version="1.0" encoding="UTF-8"?><sqlb_project><db path="hospital (1).sqlite" readonly="0" foreign_keys="1" case_sensitive_like="0" temp_store="0" wal_autocheckpoint="1000" synchronous="2"/><attached/><window><main_tabs open="structure browser pragmas query" current="3"/></window><tab_structure><column_width id="0" width="300"/><column_width id="1" width="0"/><column_width id="2" width="100"/><column_width id="3" width="2735"/><column_width id="4" width="0"/><expanded_item id="0" parent="1"/><expanded_item id="1" parent="1"/><expanded_item id="2" parent="1"/><expanded_item id="3" parent="1"/></tab_structure><tab_browse><table title="especialidade" custom_title="0" dock_id="1" table="4,13:mainespecialidade"/><dock_state state="000000ff00000000fd00000001000000020000038100000257fc0100000001fb000000160064006f0063006b00420072006f00770073006500310100000000000003810000012400ffffff0000028c0000000000000004000000040000000800000008fc00000000"/><default_encoding codec=""/><browse_table_settings><table schema="main" name="especialidade" show_row_id="0" encoding="" plot_x_axis="" unlock_view_pk="_rowid_" freeze_columns="0"><sort/><column_widths><column index="1" value="102"/><column index="2" value="207"/></column_widths><filter_values/><conditional_formats/><row_id_formats/><display_formats/><hidden_columns/><plot_y_axes/><global_filter/></table></browse_table_settings></tab_browse><tab_sql><sql name="SQL 1*">
+CREATE TABLE predio (
+    id_predio INTEGER PRIMARY KEY AUTOINCREMENT,
+    nome TEXT NOT NULL UNIQUE
+);
+	
+CREATE TABLE departamento (
+    id_departamento INTEGER PRIMARY KEY AUTOINCREMENT,
+    nome TEXT NOT NULL,
+    id_predio INTEGER NOT NULL REFERENCES predio(id_predio)
+);
+
+CREATE TABLE escala (
+    id_escala INTEGER PRIMARY KEY AUTOINCREMENT,
+    id_medico INTEGER NOT NULL REFERENCES medico(id_medico),
+    id_departamento INTEGER NOT NULL REFERENCES departamento(id_departamento),
+    dia_semana TEXT NOT NULL, -- Ex: 'Segunda-feira', 'Terça-feira'
+    turno TEXT NOT NULL,      -- Ex: 'Manhã', 'Tarde', 'Noite'
+    UNIQUE(id_medico, dia_semana, turno) -- Evita que o mesmo médico esteja em dois lugares ao mesmo tempo
+);
+
+CREATE TABLE departamento_especialidade (
+    id_departamento INTEGER NOT NULL REFERENCES departamento(id_departamento),
+    id_especialidade INTEGER NOT NULL REFERENCES especialidade(id_especialidade),
+    PRIMARY KEY (id_departamento, id_especialidade)
+);
+
+CREATE TABLE turno (
+    id_turno INTEGER PRIMARY KEY AUTOINCREMENT,
+    nome TEXT NOT NULL UNIQUE,      -- Ex: 'manhã', 'tarde', 'noite'
+    horario_inicio TEXT NOT NULL,   -- Ex: '07:00', '13:00', '19:00'
+    horario_fim TEXT NOT NULL       -- Ex: '13:00', '19:00', '07:00'
+);
+
+CREATE TABLE alocacao (
+    id_alocacao INTEGER PRIMARY KEY AUTOINCREMENT,
+    id_medico INTEGER NOT NULL REFERENCES medico(id_medico),
+    id_departamento INTEGER NOT NULL REFERENCES departamento(id_departamento),
+    id_turno INTEGER NOT NULL REFERENCES turno(id_turno),
+    dia_semana TEXT NOT NULL, -- Ex: 'Segunda-feira'
+    UNIQUE(id_medico, dia_semana, id_turno) -- Restrição: um médico não pode ter duas alocações no mesmo dia e no mesmo turno
+);
+
+
+</sql><sql name="SQL 2*">INSERT INTO predio (nome) VALUES ('Bloco B');
+
+INSERT INTO departamento (nome, id_predio) VALUES ('Ambulatório de Ortopedia', 1);
+
+INSERT INTO escala (id_medico, id_departamento, dia_semana, turno) 
+VALUES (30, 1, 'Segunda-feira', 'Manhã');</sql><sql name="SQL 3*">SELECT 
+    m.nome AS medico,
+    esp.nome AS especialidade,
+    esc.dia_semana,
+    esc.turno,
+    p.nome AS predio,
+    d.nome AS departamento
+FROM escala esc
+JOIN medico m ON esc.id_medico = m.id_medico
+JOIN especialidade esp ON m.id_especialidade = esp.id_especialidade
+JOIN departamento d ON esc.id_departamento = d.id_departamento
+JOIN predio p ON d.id_predio = p.id_predio
+WHERE m.nome = 'Ana Ribeiro';
+
+SELECT 
+    m.nome AS medico, 
+    d.nome AS departamento
+FROM alocacao a
+JOIN medico m ON a.id_medico = m.id_medico
+JOIN departamento d ON a.id_departamento = d.id_departamento
+LEFT JOIN departamento_especialidade de 
+    ON d.id_departamento = de.id_departamento 
+    AND m.id_especialidade = de.id_especialidade
+WHERE de.id_especialidade IS NULL;
+
+
+</sql><current_tab id="1"/></tab_sql></sqlb_project>
