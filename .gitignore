@@ -1,0 +1,11 @@
+# Maven / IDE
+backend/target/
+.idea/
+*.iml
+.vscode/
+.DS_Store
+
+# arquivos temporários do SQLite
+*.sqlite-journal
+*.sqlite-wal
+*.sqlite-shm
