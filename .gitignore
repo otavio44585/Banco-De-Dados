@@ -9,3 +9,7 @@ backend/target/
 *.sqlite-journal
 *.sqlite-wal
 *.sqlite-shm
+
+# Ignorar pastas e arquivos locais
+projeto/
+*.rar
