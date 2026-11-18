@@ -1,0 +1,20 @@
+meta {
+  name: RN02 - Ana na Maternidade
+  type: http
+  seq: 3
+}
+
+post {
+  url: http://localhost:8081/api/alocacoes
+  body: json
+  auth: none
+}
+
+body:json {
+  {
+    "idMedico": 1,
+    "idDepartamento": 3,
+    "idTurno": 2,
+    "diaSemana": 2
+  }
+}

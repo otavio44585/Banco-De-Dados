@@ -1,0 +1,20 @@
+meta {
+  name: RN01 - Repetir a alocacao da Ana
+  type: http
+  seq: 2
+}
+
+post {
+  url: http://localhost:8081/api/alocacoes
+  body: json
+  auth: none
+}
+
+body:json {
+  {
+    "idMedico": 1,
+    "idDepartamento": 2,
+    "idTurno": 1,
+    "diaSemana": 1
+  }
+}

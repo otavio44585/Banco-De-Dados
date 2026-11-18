@@ -1,0 +1,20 @@
+meta {
+  name: RN03 - Ursula noite de segunda
+  type: http
+  seq: 4
+}
+
+post {
+  url: http://localhost:8081/api/alocacoes
+  body: json
+  auth: none
+}
+
+body:json {
+  {
+    "idMedico": 21,
+    "idDepartamento": 1,
+    "idTurno": 3,
+    "diaSemana": 1
+  }
+}

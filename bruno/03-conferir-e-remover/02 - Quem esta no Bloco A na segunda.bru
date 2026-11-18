@@ -1,0 +1,16 @@
+meta {
+  name: Quem esta no Bloco A na segunda
+  type: http
+  seq: 2
+}
+
+get {
+  url: http://localhost:8081/api/alocacoes?idPredio=1&dia=1
+  body: none
+  auth: none
+}
+
+params:query {
+  idPredio: 1
+  dia: 1
+}
